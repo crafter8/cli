@@ -6,7 +6,7 @@ import path from "node:path";
 import process from "node:process";
 import { test } from "node:test";
 import { isEntrypointInvocation, parseCliRoute, runCli } from "../cli.js";
-import { login, parseLoginArgs, whoami } from "../lib/auth.js";
+import { login, logout, parseLoginArgs, whoami } from "../lib/auth.js";
 import { loadCliConfig } from "../lib/config.js";
 import { buildPublicationFiles, parsePublishDatapackArgs, publishDatapack } from "../lib/publishDatapack.js";
 
@@ -348,3 +348,49 @@ test("publishDatapack falls back to saved login credentials", async () => {
     await fs.rm(tmpDir, { recursive: true, force: true });
   }
 });
+
+test("logout removes the active saved profile", async () => {
+  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "crafter8-cli-logout-"));
+  const env = {
+    ...process.env,
+    CRAFTER8_CLI_CONFIG_PATH: path.join(tmpDir, "config.json"),
+  };
+
+  try {
+    await upsertFixtureProfile("https://api.one.test", "usr_one", "tok_one", env);
+    await upsertFixtureProfile("https://api.two.test", "usr_two", "tok_two", env);
+
+    const removedDefault = await logout({}, env);
+    assert.equal(removedDefault.removed, true);
+    assert.equal(removedDefault.apiBaseUrl, "https://api.two.test");
+
+    const afterDefaultLogout = await loadCliConfig(env);
+    assert.deepEqual(Object.keys(afterDefaultLogout.profiles).sort(), ["https://api.one.test"]);
+    assert.equal(afterDefaultLogout.defaultProfile, "https://api.one.test");
+
+    const removedAll = await logout({ all: true }, env);
+    assert.equal(removedAll.removed, true);
+    const afterClear = await loadCliConfig(env);
+    assert.deepEqual(afterClear, {
+      version: 1,
+      defaultProfile: null,
+      profiles: {},
+    });
+  } finally {
+    await fs.rm(tmpDir, { recursive: true, force: true });
+  }
+});
+
+async function upsertFixtureProfile(apiBaseUrl, userId, userToken, env) {
+  const config = await loadCliConfig(env);
+  config.profiles[apiBaseUrl] = {
+    apiBaseUrl,
+    userId,
+    userToken,
+    displayName: userId,
+    updatedAt: new Date().toISOString(),
+  };
+  config.defaultProfile = apiBaseUrl;
+  await fs.mkdir(path.dirname(env.CRAFTER8_CLI_CONFIG_PATH), { recursive: true });
+  await fs.writeFile(env.CRAFTER8_CLI_CONFIG_PATH, `${JSON.stringify(config, null, 2)}\n`, "utf8");
+}

@@ -10,6 +10,7 @@ Current commands:
 
 - `crafter8 build`
 - `crafter8 login`
+- `crafter8 logout`
 - `crafter8 whoami`
 - `crafter8 publish datapack`
 
@@ -37,6 +38,12 @@ Inspect the active CLI session:
 
 ```bash
 crafter8 whoami
+```
+
+Remove the active CLI session:
+
+```bash
+crafter8 logout
 ```
 
 Publish a datapack through Crafter8 backend:
