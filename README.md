@@ -9,6 +9,8 @@ Canonical repo:
 Current commands:
 
 - `crafter8 build`
+- `crafter8 login`
+- `crafter8 whoami`
 - `crafter8 publish datapack`
 
 Install:
@@ -23,14 +25,24 @@ Build a declaration entry:
 crafter8 build --entry ./crafter8.mjs --out-dir ./dist --emit-community-datapack --publication-dir .
 ```
 
+Create a local Crafter8 CLI login:
+
+```bash
+crafter8 login \
+  --api-base-url https://staging-api.crafter8.app \
+  --display-name "Leo"
+```
+
+Inspect the active CLI session:
+
+```bash
+crafter8 whoami
+```
+
 Publish a datapack through Crafter8 backend:
 
 ```bash
-crafter8 publish datapack \
-  --api-base-url https://staging-api.crafter8.app \
-  --user-id <user-id> \
-  --user-token <user-token> \
-  --target cloudflare-r2
+crafter8 publish datapack --target cloudflare-r2
 ```
 
 Default publish inputs are:
@@ -44,6 +56,10 @@ The publish command:
 2. creates a backend publication session
 3. uploads payload directly when the backend returns an upload grant
 4. finalizes the session
+
+The CLI stores login state in a local config file. Override its location with:
+
+- `CRAFTER8_CLI_CONFIG_PATH=/absolute/path/to/config.json`
 
 Current supported targets:
 

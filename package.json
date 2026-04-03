@@ -1,6 +1,6 @@
 {
   "name": "@crafter8/cli",
-  "version": "0.1.0",
+  "version": "0.1.1-next.0",
   "description": "Crafter8 CLI for building and publishing apps, modules, and datapacks.",
   "license": "MIT",
   "type": "module",
