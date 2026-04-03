@@ -1,0 +1,42 @@
+{
+  "name": "@crafter8/cli",
+  "version": "0.1.0",
+  "description": "Crafter8 CLI for building and publishing apps, modules, and datapacks.",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crafter8/cli.git"
+  },
+  "homepage": "https://github.com/crafter8/cli",
+  "bugs": {
+    "url": "https://github.com/crafter8/cli/issues"
+  },
+  "bin": {
+    "crafter8": "cli.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "crafter8",
+    "cli",
+    "artifacts",
+    "datapacks",
+    "apps",
+    "modules"
+  ],
+  "files": [
+    "cli.js",
+    "lib",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test ./test/**/*.test.mjs"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.908.0",
+    "@crafter8/sdk": "next"
+  }
+}

@@ -1,0 +1,30 @@
+name: Publish CLI Next
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish-next:
+    runs-on: ubuntu-latest
+    environment: npm-publish
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify package tests
+        run: npm test
+
+      - name: Publish next tag
+        run: npm publish --tag next --access public

@@ -1,0 +1,26 @@
+{
+  "name": "Crafter8 CLI",
+  "dockerComposeFile": [
+    "../compose.cli-dev.yml"
+  ],
+  "service": "cli-dev",
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose",
+  "remoteUser": "node",
+  "remoteEnv": {
+    "CRAFTER8_CLI_GITHUB_REPO": "crafter8/cli"
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      },
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-typescript-next"
+      ]
+    }
+  },
+  "postCreateCommand": "bash -lc 'npm test'"
+}
